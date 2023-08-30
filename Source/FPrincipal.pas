@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
-  System.Json, Vcl.ExtCtrls;
+  System.Json,
+  REST.Json,
+  Vcl.ExtCtrls;
 
 type
   TForm1 = class(TForm)
@@ -13,6 +15,7 @@ type
     BitBtn1: TBitBtn;
     Panel1: TPanel;
     Memo2: TMemo;
+    Memo3: TMemo;
     procedure BitBtn1Click(Sender: TObject);
   private
     { Private declarations }
@@ -50,8 +53,10 @@ begin
       Memo2.Lines.Add(IntToStr(LNumero));
     end;
 
-
-
+  Memo3.Lines.Add(LJson.ToJSON);
+  Memo3.Lines.Add('');
+  Memo3.Lines.Add('Json formatado..');
+  Memo3.Lines.Add(TJson.Format(LJson));
 end;
 
 end.

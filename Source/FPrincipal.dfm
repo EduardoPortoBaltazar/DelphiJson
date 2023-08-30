@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   Caption = 'Form1'
   ClientHeight = 382
-  ClientWidth = 832
+  ClientWidth = 1076
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -43,11 +43,12 @@ object Form1: TForm1
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 826
+    Width = 1070
     Height = 41
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 1
+    ExplicitWidth = 826
     object BitBtn1: TBitBtn
       Left = 8
       Top = 8
@@ -59,7 +60,7 @@ object Form1: TForm1
     end
   end
   object Memo2: TMemo
-    Left = 480
+    Left = 372
     Top = 47
     Width = 352
     Height = 335
@@ -67,5 +68,18 @@ object Form1: TForm1
     Lines.Strings = (
       'Memo2')
     TabOrder = 2
+    ExplicitLeft = 228
+    ExplicitTop = 50
+  end
+  object Memo3: TMemo
+    Left = 724
+    Top = 47
+    Width = 352
+    Height = 335
+    Align = alRight
+    Lines.Strings = (
+      'Memo3')
+    TabOrder = 3
+    ExplicitLeft = 480
   end
 end
