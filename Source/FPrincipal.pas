@@ -7,7 +7,10 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons,
   System.Json,
   REST.Json,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls,
+  DataSet.Serialize, VclTee.TeeGDIPlus, VCLTee.TeeProcs, VCLTee.TeeDraw3D,
+  Vcl.ComCtrls, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids, REST.Types,
+  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope;
 
 type
   TForm1 = class(TForm)
@@ -16,7 +19,37 @@ type
     Panel1: TPanel;
     Memo2: TMemo;
     Memo3: TMemo;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    Panel2: TPanel;
+    DBGrid1: TDBGrid;
+    dsEmploy: TDataSource;
+    cdsEmploy: TClientDataSet;
+    Panel3: TPanel;
+    Button1: TButton;
+    mmAdicionaCdsJson: TMemo;
+    mmLerCds: TMemo;
+    Button2: TButton;
+    Button3: TButton;
+    TabSheet3: TTabSheet;
+    mmArrayNaMao: TMemo;
+    Panel4: TPanel;
+    Button4: TButton;
+    mmArrayManual: TMemo;
+    TabSheet4: TTabSheet;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
+    Panel5: TPanel;
+    Button5: TButton;
+    Memo4: TMemo;
     procedure BitBtn1Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -57,6 +90,93 @@ begin
   Memo3.Lines.Add('');
   Memo3.Lines.Add('Json formatado..');
   Memo3.Lines.Add(TJson.Format(LJson));
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  LJson: TJSONValue;
+begin
+  mmLerCds.Clear;
+  mmLerCds.Lines.Add(cdsEmploy.ToJSONObject.ToString);
+
+  LJson :=  TJSONObject.ParseJSONValue(mmLerCds.Lines.Text) as TJSONValue;
+  try
+    mmAdicionaCdsJson.Lines.Add(TJson.Format(LJson));
+  finally
+    LJson.Free;
+  end;
+end;
+
+procedure TForm1.Button2Click(Sender: TObject);
+begin
+  mmLerCds.Clear;
+  mmAdicionaCdsJson.Clear;
+  mmAdicionaCdsJson.Lines.Add(TJson.Format(cdsEmploy.ToJSONArray));
+end;
+
+procedure TForm1.Button3Click(Sender: TObject);
+begin
+  mmAdicionaCdsJson.Clear;
+  mmLerCds.Clear;
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
+var
+  LJArrayMaster: TJSONArray;
+  LJPedido: TJSONObject;
+  LJItens: TJSONArray;
+  LJItenDet: TJSONObject;
+begin
+
+  LJArrayMaster := TJSONArray.Create;
+  //////////////////////////////////////////////
+  LJPedido := TJSONObject.Create;
+  LJPedido.AddPair('id', '666');
+  LJPedido.AddPair('valor', TJSONNumber.Create(100));
+
+     LJItens := TJSONArray.Create;
+     LJItenDet := TJSONObject.Create;
+        LJItenDet
+          .AddPair('id_item', '1245')
+          .AddPair('valor_item',TJSONNumber.Create(12));
+
+  LJItens.AddElement(LJItenDet);
+  LJPedido.AddPair('itens', LJItens);
+  LJArrayMaster.AddElement(LJPedido);
+  ///////////////////////////////////////////////////
+
+  LJPedido := TJSONObject.Create;
+  LJPedido.AddPair('id', '777');
+  LJPedido.AddPair('valor', TJSONNumber.Create(50));
+
+   LJItens := TJSONArray.Create;
+   LJItenDet := TJSONObject.Create;
+     LJItenDet := TJSONObject.Create;
+        LJItenDet
+          .AddPair('id_item', '6969')
+          .AddPair('valor_item',TJSONNumber.Create(69));
+
+
+   LJItens.AddElement(LJItenDet);
+   LJPedido.AddPair('itens', LJItens);
+   LJArrayMaster.AddElement(LJPedido);
+
+  mmArrayManual.Clear;
+  mmArrayManual.Lines.Add(TJson.Format(LJArrayMaster));
+
+end;
+
+procedure TForm1.Button5Click(Sender: TObject);
+var
+  LEmpresa: TJSONValue;
+begin
+  RESTRequest1.Params.ParameterByName('cnpj').Value := '33000167066129';
+  RESTRequest1.Execute;
+
+  LEmpresa := TJSONValue.ParseJSONValue(RESTResponse1.Content.Trim);
+
+  Memo4.Lines.Add(LEmpresa.Format);
+
 end;
 
 end.
